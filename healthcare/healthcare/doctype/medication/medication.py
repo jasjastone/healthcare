@@ -1,0 +1,327 @@
+# Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
+# For license information, please see license.txt
+
+
+import json
+
+import frappe
+from frappe import _
+from frappe.model.document import Document
+from frappe.model.rename_doc import rename_doc
+from frappe.utils import get_link_to_form
+
+from healthcare.healthcare.doctype.medication_class.medication_class import get_ancestor_map
+
+
+class Medication(Document):
+	def after_insert(self):
+		create_item_from_medication(self)
+
+	def on_update(self):
+		self.disable_unlinked_items()
+
+		if self.linked_items:
+			self.update_item_and_item_price()
+
+	def validate(self):
+		self.clear_orderable_only_fields()
+
+		if not self.price_list and self.linked_items:
+			price_list = frappe.db.get_single_value("Selling Settings", "selling_price_list")
+			if price_list:
+				self.price_list = price_list
+			else:
+				frappe.throw(
+					_(
+						f"Please select a Price List for adding Item Price or set the Default Selling Price List in {get_link_to_form('Selling Settings', 'Selling Settings')}"
+					)
+				)
+
+		if self.linked_items:
+			for item in self.linked_items:
+				exist_medication = frappe.db.get_value(
+					"Medication Linked Item",
+					{"item": item.item_code, "parent": ("!=", self.name)},
+					"parent",
+				)
+				if exist_medication:
+					frappe.throw(
+						_(
+							"Item <b>{}</b> has been already used in <b><a href='/app/medication/{}'>Medication</a></b>"
+						).format(item.item_code, exist_medication)
+					)
+
+	def clear_orderable_only_fields(self):
+		"""An ingredient-only record must stay unlinked to an Item, so it can never be
+		prescribed, searched for or billed. It remains visible to allergy and interaction
+		checks. The Items themselves are disabled once the record has saved"""
+		if self.is_orderable or not self.linked_items:
+			return
+
+		frappe.msgprint(
+			_("{0} is not orderable, so its linked Items have been removed and disabled").format(
+				frappe.bold(self.generic_name)
+			),
+			title=_("Not Orderable"),
+			indicator="orange",
+		)
+		self.linked_items = []
+		self.price_list = None
+
+	def disable_unlinked_items(self):
+		"""An Item outlives the row that linked it. Clearing linked_items while marking a
+		medication ingredient-only would otherwise leave that Item enabled, and an enabled
+		Item is still reachable from the prescriber's drug search"""
+		if self.is_orderable:
+			return
+
+		for item_code in self.unlinked_item_codes():
+			if frappe.db.exists("Item", item_code):
+				frappe.db.set_value("Item", item_code, "disabled", 1)
+
+	def unlinked_item_codes(self):
+		previous = self.get_doc_before_save()
+		if not previous:
+			return []
+
+		linked = {row.item_code for row in self.linked_items}
+		return [row.item_code for row in previous.linked_items if row.item_code not in linked]
+
+	def update_item_and_item_price(self):
+		for item in self.linked_items:
+			if not item.item:
+				insert_item(self, item)
+			else:
+				if item.is_billable:
+					if item.change_in_item:
+						item_doc = frappe.get_doc("Item", {"name": item.item_code})
+						item_doc.item_name = item.item_code
+						item_doc.item_group = item.item_group
+						item_doc.description = item.description
+						item_doc.stock_uom = item.stock_uom
+						item_doc.manufacturer = item.manufacturer
+						item_doc.brand = item.brand
+						item_doc.disabled = 0
+						if item.get("gst_hsn_code"):
+							item_doc.gst_hsn_code = item.get("gst_hsn_code")
+						item_doc.save(ignore_permissions=True)
+						if item.rate:
+							item_price = frappe.db.exists(
+								"Item Price", {"item_code": item.item_code, "price_list": self.price_list}
+							)
+							if not item_price:
+								if item.item_code:
+									make_item_price(item.item_code, item.rate, self.price_list)
+							else:
+								item_price = frappe.get_doc("Item Price", item_price)
+								item_price.item_name = item.item_code
+								item_price.price_list_rate = item.rate
+								item_price.price_list = self.price_list
+								item_price.save()
+				else:
+					frappe.db.set_value("Item", item.item_code, "disabled", 1)
+
+				frappe.db.set_value("Medication Linked Item", item.name, "change_in_item", 0)
+		self.reload()
+
+
+def create_item_from_medication(doc):
+	for item in doc.linked_items:
+		insert_item(doc, item)
+	doc.reload()
+
+
+def insert_item(doc, item):
+	if not frappe.db.exists("Item", item.item_code):
+		item_doc = frappe.get_doc(
+			{
+				"doctype": "Item",
+				"item_code": item.item_code,
+				"item_name": item.item_code,
+				"item_group": item.item_group,
+				"description": item.item_code,
+				"is_sales_item": 1,
+				"is_stock_item": 1,
+				"disabled": 0 if item.is_billable and not doc.disabled else 1,
+				"stock_uom": item.stock_uom or frappe.db.get_single_value("Stock Settings", "stock_uom"),
+			}
+		)
+	else:
+		item_doc = frappe.get_doc("Item", item.item_code)
+		if item_doc.stock_uom != item.stock_uom:
+			frappe.throw(
+				_("Cannot link existing Item Code {}, UOM {} does not match with Item Stock UOM").format(
+					item.item_code, item.stock_uom, item_doc.stock_uom
+				)
+			)
+		item_doc.item_name = item.item_code  # also update the name and description of existing item
+		item_doc.description = item.description
+
+	if item.get("gst_hsn_code"):
+		item_doc.gst_hsn_code = item.get("gst_hsn_code")
+	item_doc.save(ignore_permissions=True)
+
+	make_item_price(item_doc.name, item.rate, doc.price_list)
+	frappe.db.set_value("Medication Linked Item", item.name, "item", item.item_code)
+
+
+def make_item_price(item, item_price, price_list):
+	frappe.get_doc(
+		{
+			"doctype": "Item Price",
+			"price_list": price_list,
+			"item_code": item,
+			"price_list_rate": item_price,
+		}
+	).insert(ignore_permissions=True, ignore_mandatory=True)
+
+
+@frappe.whitelist()
+def change_item_code_from_medication(item_code, doc):
+	doc = frappe._dict(json.loads(doc))
+
+	if frappe.db.exists("Item", {"item_code": item_code}):
+		frappe.throw(_("Item with Item Code {0} already exists").format(item_code))
+	else:
+		rename_doc("Item", doc.item_code, item_code, ignore_permissions=True)
+		frappe.db.set_value("Medication", doc.name, "item_code", item_code)
+	return
+
+
+@frappe.whitelist()
+def get_children(parent=None, is_root=False, **filters):
+	if not parent or parent == "Medication":
+		frappe.msgprint(_("Please select a Medication"))
+		return
+
+	if parent:
+		frappe.form_dict.parent = parent
+
+	if frappe.form_dict.parent:
+		medication_doc = frappe.get_cached_doc("Medication", frappe.form_dict.parent)
+		frappe.has_permission("Medication", doc=medication_doc, throw=True)
+
+		medication_items = frappe.get_all(
+			"Medication Linked Item",
+			fields=["item as item_code", "rate"],
+			filters=[["parent", "=", frappe.form_dict.parent]],
+			order_by="idx",
+		)
+
+		item_names = tuple(d.get("item_code") for d in medication_items)
+
+		items = frappe.get_list(
+			"Item",
+			fields=["image", "description", "name", "stock_uom", "item_name"],
+			filters=[["name", "in", item_names]],
+		)  # to get only required item dicts
+
+		for medication_item in medication_items:
+			# extend medication_item dict with respective item dict
+			medication_item.update(
+				# returns an item dict from items list which matches with item_code
+				next(item for item in items if item.get("name") == medication_item.get("item_code"))
+			)
+			medication_item.image = frappe.db.escape(medication_item.image)
+			medication_item.currency = frappe.db.get_single_value("Global Defaults", "default_currency")
+
+		return medication_items
+
+
+def validate_medication_is_orderable(medication, label):
+	"""Ordering paths accept only orderable medications. The link filter is a browser
+	convenience, this is the guard that holds for imports and API writes"""
+	if not medication or frappe.db.get_value("Medication", medication, "is_orderable"):
+		return
+
+	frappe.throw(
+		_("{0}: {1} exists only as an ingredient and cannot be ordered").format(
+			label, frappe.bold(medication)
+		),
+		title=_("Not Orderable"),
+	)
+
+
+def expand(medication: str) -> set[tuple[str, str]]:
+	"""Everything one medication should be matched against"""
+	return expand_many([medication])[medication]
+
+
+def expand_many(medications: list[str]) -> dict[str, set[tuple[str, str]]]:
+	"""Everything each medication should be matched against: itself, the medications it is
+	made of, and every class those sit under.
+
+	Returned as (doctype, name) pairs, the same shape an allergy substance or an interactant
+	is recorded in, so a check is a set intersection. Expanded as a batch because a save is
+	checked against the patient's whole current list, and a query per medication does not
+	scale on a busy round.
+	"""
+	medications = [name for name in dict.fromkeys(medications) if name]
+	if not medications:
+		return {}
+
+	ingredients = get_ingredient_map(medications)
+	families = {name: collect_family(name, ingredients) for name in medications}
+	classes = get_medication_classes({n for family in families.values() for n in family})
+
+	return {name: build_interactants(family, classes) for name, family in families.items()}
+
+
+def build_interactants(family, classes):
+	interactants = {("Medication", name) for name in family}
+	ancestors = get_ancestor_map()
+
+	for name in family:
+		medication_class = classes.get(name)
+		if not medication_class:
+			continue
+		interactants.add(("Medication Class", medication_class))
+		interactants.update(("Medication Class", a) for a in ancestors.get(medication_class, []))
+
+	return interactants
+
+
+def collect_family(medication, ingredients):
+	"""A medication and, for a combination, every medication beneath it"""
+	family, pending = set(), [medication]
+
+	while pending:
+		name = pending.pop()
+		if name in family:
+			continue
+		family.add(name)
+		pending.extend(ingredients.get(name, []))
+
+	return family
+
+
+def get_ingredient_map(medications):
+	"""parent medication -> its ingredient medications, followed to any depth"""
+	ingredients, frontier, seen = {}, set(medications), set()
+
+	while frontier:
+		seen |= frontier
+		rows = frappe.get_all(
+			"Medication Ingredient",
+			filters={"parent": ("in", list(frontier)), "parenttype": "Medication"},
+			fields=["parent", "medication"],
+		)
+		frontier = set()
+
+		for row in rows:
+			if not row.medication:
+				continue
+			ingredients.setdefault(row.parent, []).append(row.medication)
+			if row.medication not in seen:
+				frontier.add(row.medication)
+
+	return ingredients
+
+
+def get_medication_classes(medications):
+	rows = frappe.get_all(
+		"Medication",
+		filters={"name": ("in", list(medications))},
+		fields=["name", "medication_class"],
+	)
+	return {row.name: row.medication_class for row in rows if row.medication_class}

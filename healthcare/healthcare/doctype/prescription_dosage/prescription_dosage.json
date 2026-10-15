@@ -1,0 +1,69 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:dosage",
+ "creation": "2016-09-16 15:49:25.327610",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "dosage",
+  "dosage_strength"
+ ],
+ "fields": [
+  {
+   "fieldname": "dosage",
+   "fieldtype": "Data",
+   "ignore_xss_filter": 1,
+   "in_list_view": 1,
+   "label": "Dosage",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "dosage_strength",
+   "fieldtype": "Table",
+   "options": "Dosage Strength"
+  }
+ ],
+ "links": [],
+ "modified": "2025-12-25 09:36:45.194373",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Prescription Dosage",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Physician",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "restrict_to_domain": "Healthcare",
+ "row_format": "Dynamic",
+ "search_fields": "dosage",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2017-02-14 15:40:14.385707",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "strength",
+  "strength_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "strength",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Strength",
+   "reqd": 1
+  },
+  {
+   "fieldname": "strength_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Time"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2025-12-25 09:36:40.943281",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Dosage Strength",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "restrict_to_domain": "Healthcare",
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

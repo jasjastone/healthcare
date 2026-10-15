@@ -1,0 +1,106 @@
+import frappe
+from frappe.utils import add_days, add_months, getdate
+
+from healthcare.healthcare.doctype.therapy_plan.test_therapy_plan import create_encounter
+from healthcare.healthcare.report.diagnosis_trends.diagnosis_trends import execute
+from healthcare.tests.utils import HealthcareTestSuite
+
+
+class TestDiagnosisTrends(HealthcareTestSuite):
+	def setUp(self):
+		super().setUp()
+		self.create_test_transactions()
+
+	def create_test_transactions(self):
+		patient_name = frappe.db.get_list("Patient")[0].name
+		cardiology_practitioner = frappe.db.get_value(
+			"Healthcare Practitioner",
+			{
+				"last_name": "Healthcare Practitioner 2",
+				"department": "Cardiology",
+			},
+			"name",
+		)
+		general_practitioner = frappe.db.get_value(
+			"Healthcare Practitioner",
+			{
+				"last_name": "Healthcare Practitioner 0",
+				"department": "_Test Medical Department",
+			},
+			"name",
+		)
+
+		self.assertTrue(patient_name)
+		self.assertTrue(cardiology_practitioner)
+		self.assertTrue(general_practitioner)
+
+		self.heart_attack_encounter = self.create_encounter_with_diagnosis(
+			patient=patient_name,
+			practitioner=cardiology_practitioner,
+			medical_department="Cardiology",
+			diagnosis="Heart Attack",
+		)
+
+		self.fever_encounter = self.create_encounter_with_diagnosis(
+			patient=patient_name,
+			practitioner=general_practitioner,
+			medical_department="_Test Medical Department",
+			diagnosis="Fever",
+		)
+
+	def create_encounter_with_diagnosis(self, patient, practitioner, medical_department, diagnosis):
+		encounter = create_encounter(
+			patient=patient,
+			medical_department=medical_department,
+			practitioner=practitioner,
+			submit=False,
+		)
+
+		encounter.reload()
+		encounter.source = "Direct"
+		encounter.medical_department = medical_department
+		encounter.append(
+			"diagnosis",
+			{
+				"diagnosis": diagnosis,
+			},
+		)
+		encounter.save()
+		encounter.reload()
+
+		self.assertEqual(encounter.medical_department, medical_department)
+		self.assertTrue(
+			frappe.db.exists(
+				"Patient Encounter Diagnosis",
+				{
+					"parent": encounter.name,
+					"diagnosis": diagnosis,
+				},
+			)
+		)
+
+		return encounter
+
+	def test_report_data(self):
+		filters = {
+			"from_date": str(add_months(getdate(), -12)),
+			"to_date": str(add_days(getdate(), 1)),
+			"range": "Monthly",
+		}
+		report = execute(filters)
+		data = [row["diagnosis"] for row in report[1]]
+
+		self.assertIn("Fever", data)
+		self.assertIn("Heart Attack", data)
+
+	def test_report_data_with_filters(self):
+		filters = {
+			"from_date": str(add_months(getdate(), -12)),
+			"to_date": str(add_days(getdate(), 1)),
+			"range": "Monthly",
+			"department": "Cardiology",
+		}
+		report = execute(filters)
+		data = [row["diagnosis"] for row in report[1]]
+
+		self.assertIn("Heart Attack", data)
