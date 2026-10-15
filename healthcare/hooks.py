@@ -108,8 +108,9 @@ after_uninstall = "healthcare.uninstall.after_uninstall"
 # ---------------
 # Override standard doctype classes
 
-extend_doctype_class = {
-	"Sales Invoice": "healthcare.healthcare.custom_doctype.sales_invoice.SalesInvoiceMixin",
+# tmhs: our frappe fork has no extend_doctype_class hook, so override with a combined class instead
+override_doctype_class = {
+	"Sales Invoice": "healthcare.healthcare.custom_doctype.sales_invoice.HealthcareSalesInvoice",
 }
 
 # Document Events

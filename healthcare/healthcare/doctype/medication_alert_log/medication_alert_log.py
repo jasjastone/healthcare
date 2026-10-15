@@ -270,7 +270,7 @@ def record_blocked_attempt(doc, alerts):
 		[dict(alert) for alert in alerts],
 	)
 
-	if frappe.in_test:
+	if frappe.flags.in_test:
 		# nothing rolls back before the assertion, so write where the test can see it
 		write_blocked_logs(*details, commit=False)
 	else:

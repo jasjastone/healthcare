@@ -109,3 +109,8 @@ class SalesInvoiceMixin:
 			self.patient_payable_amount = self.outstanding_amount - self.total_insurance_coverage_amount
 		else:
 			self.patient_payable_amount = self.outstanding_amount
+
+
+# tmhs: used by override_doctype_class in hooks.py (our frappe fork lacks extend_doctype_class)
+class HealthcareSalesInvoice(SalesInvoiceMixin, SalesInvoice):
+	pass
