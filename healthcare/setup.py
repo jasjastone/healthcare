@@ -35,6 +35,8 @@ data = {
 		"Nursing User",
 		"Physician",
 		"Patient",
+		"Healthcare Pharmacist",
+		"Healthcare Receptionist",
 	],
 	"custom_fields": {
 		"Sales Invoice": [
@@ -329,7 +331,20 @@ def create_default_root_service_units():
 		create_healthcare_service_unit_tree_root(company)
 
 
+def create_custom_roles():
+	# Queue Display: login for the waiting-room TV (/waiting-display), no desk access
+	# Healthcare Pharmacist: gets prescription alerts and the Pharmacy Desk workspace
+	# Healthcare Receptionist: registers patients and books / checks in appointments (Reception Desk)
+	roles = (("Queue Display", 0), ("Healthcare Pharmacist", 1), ("Healthcare Receptionist", 1))
+	for role, desk_access in roles:
+		if not frappe.db.exists("Role", role):
+			frappe.get_doc({"doctype": "Role", "role_name": role, "desk_access": desk_access}).insert(
+				ignore_permissions=True
+			)
+
+
 def create_custom_records():
+	create_custom_roles()
 	create_medical_departments()
 	create_antibiotics()
 	create_medication_classes()

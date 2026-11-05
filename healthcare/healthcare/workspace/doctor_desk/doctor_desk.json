@@ -1,0 +1,83 @@
+{
+ "app": "healthcare",
+ "charts": [],
+ "content": "[{\"id\":\"dd-header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"dd-queue01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clinical Queue\",\"col\":4}},{\"id\":\"dd-appt001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patient Appointment\",\"col\":4}},{\"id\":\"dd-enc0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patient Encounter\",\"col\":4}},{\"id\":\"dd-pat0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patient\",\"col\":4}},{\"id\":\"dd-vital01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vital Signs\",\"col\":4}},{\"id\":\"dd-hist001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patient History\",\"col\":4}}]",
+ "creation": "2026-10-27 13:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "healthcare",
+ "idx": 0,
+ "indicator_color": "blue",
+ "is_hidden": 0,
+ "label": "Doctor Desk",
+ "links": [],
+ "modified": "2026-10-27 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Doctor Desk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Physician"
+  },
+  {
+   "role": "Healthcare Administrator"
+  }
+ ],
+ "sequence_id": 30.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Clinical Queue",
+   "link_to": "clinical-queue",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "{} Open",
+   "label": "Patient Appointment",
+   "link_to": "Patient Appointment",
+   "stats_filter": "[[\"Patient Appointment\",\"status\",\"=\",\"Open\"]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Patient Encounter",
+   "link_to": "Patient Encounter",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Patient",
+   "link_to": "Patient",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Vital Signs",
+   "link_to": "Vital Signs",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Patient History",
+   "link_to": "patient_history",
+   "type": "Page"
+  }
+ ],
+ "title": "Doctor Desk",
+ "type": "Workspace"
+}

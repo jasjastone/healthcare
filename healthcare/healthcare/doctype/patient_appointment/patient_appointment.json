@@ -69,6 +69,7 @@
   "section_break_3",
   "appointment_based_on_check_in",
   "position_in_queue",
+  "checked_in_at",
   "column_break_wicc",
   "reminded",
   "appointment_notes_section",
@@ -171,7 +172,6 @@
    "label": "Appointment Details"
   },
   {
-   "depends_on": "eval:doc.appointment_for==\"Practitioner\"",
    "fieldname": "practitioner",
    "fieldtype": "Link",
    "in_standard_filter": 1,
@@ -464,6 +464,14 @@
    "read_only": 1
   },
   {
+   "description": "Set when status changes to \"Checked In\"; used for waiting times",
+   "fieldname": "checked_in_at",
+   "fieldtype": "Datetime",
+   "label": "Checked In At",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
    "fetch_from": "appointment_type.allow_booking_for",
    "fieldname": "appointment_for",
    "fieldtype": "Select",
@@ -584,13 +592,23 @@
    "link_fieldname": "reference_name"
   }
  ],
- "modified": "2026-06-26 18:11:41.318190",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Patient Appointment",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Receptionist",
+   "share": 1,
+   "write": 1
+  },
   {
    "create": 1,
    "delete": 1,

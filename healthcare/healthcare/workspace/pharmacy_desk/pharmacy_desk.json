@@ -1,0 +1,85 @@
+{
+ "app": "healthcare",
+ "charts": [],
+ "content": "[{\"id\":\"pd-header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"pd-queue01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clinical Queue\",\"col\":4}},{\"id\":\"pd-mreq001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Medication Request\",\"col\":4}},{\"id\":\"pd-ipmo001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inpatient Medication Order\",\"col\":4}},{\"id\":\"pd-ipme001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inpatient Medication Entry\",\"col\":4}},{\"id\":\"pd-med0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Medication\",\"col\":4}},{\"id\":\"pd-stent01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Stock Entry\",\"col\":4}}]",
+ "creation": "2026-10-27 14:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "healthcare",
+ "idx": 0,
+ "indicator_color": "cyan",
+ "is_hidden": 0,
+ "label": "Pharmacy Desk",
+ "links": [],
+ "modified": "2026-10-27 16:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Pharmacy Desk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Healthcare Pharmacist"
+  },
+  {
+   "role": "Healthcare Administrator"
+  }
+ ],
+ "sequence_id": 34.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Clinical Queue",
+   "link_to": "clinical-queue",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "{} New",
+   "label": "Medication Request",
+   "link_to": "Medication Request",
+   "stats_filter": "[[\"Medication Request\",\"docstatus\",\"=\",1],[\"Medication Request\",\"status\",\"=\",\"draft-Medication Request Status\"]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Inpatient Medication Order",
+   "link_to": "Inpatient Medication Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Inpatient Medication Entry",
+   "link_to": "Inpatient Medication Entry",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Medication",
+   "link_to": "Medication",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Stock Entry",
+   "link_to": "Stock Entry",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Pharmacy Desk",
+ "type": "Workspace"
+}

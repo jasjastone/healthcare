@@ -100,13 +100,20 @@
    "link_fieldname": "appointment_type"
   }
  ],
- "modified": "2026-03-29 16:52:14.814266",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Appointment Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Receptionist"
+  },
   {
    "create": 1,
    "delete": 1,

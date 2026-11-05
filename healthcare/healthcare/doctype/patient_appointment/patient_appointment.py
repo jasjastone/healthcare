@@ -18,6 +18,7 @@ from frappe.utils import (
 	get_link_to_form,
 	get_time,
 	getdate,
+	now_datetime,
 )
 
 from erpnext.setup.doctype.employee.employee import is_holiday
@@ -61,6 +62,8 @@ class PatientAppointment(Document):
 		self.set_title()
 		self.update_event()
 		self.set_position_in_queue()
+		if self.status == "Checked In" and not self.checked_in_at:
+			self.checked_in_at = now_datetime()
 
 	def on_update(self):
 		if (

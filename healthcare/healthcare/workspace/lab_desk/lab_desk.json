@@ -1,0 +1,88 @@
+{
+ "app": "healthcare",
+ "charts": [],
+ "content": "[{\"id\":\"ld-header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"ld-queue01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clinical Queue\",\"col\":4}},{\"id\":\"ld-sreq001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Request\",\"col\":4}},{\"id\":\"ld-ltest01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lab Test\",\"col\":4}},{\"id\":\"ld-sample1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sample Collection\",\"col\":4}},{\"id\":\"ld-obs0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Observation\",\"col\":4}},{\"id\":\"ld-drep001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Diagnostic Report\",\"col\":4}}]",
+ "creation": "2026-10-27 13:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "healthcare",
+ "idx": 0,
+ "indicator_color": "purple",
+ "is_hidden": 0,
+ "label": "Lab Desk",
+ "links": [],
+ "modified": "2026-10-27 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Lab Desk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Laboratory User"
+  },
+  {
+   "role": "LabTest Approver"
+  },
+  {
+   "role": "Healthcare Administrator"
+  }
+ ],
+ "sequence_id": 32.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Clinical Queue",
+   "link_to": "clinical-queue",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "label": "Service Request",
+   "link_to": "Service Request",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "{} Draft",
+   "label": "Lab Test",
+   "link_to": "Lab Test",
+   "stats_filter": "[[\"Lab Test\",\"docstatus\",\"=\",0]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sample Collection",
+   "link_to": "Sample Collection",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Observation",
+   "link_to": "Observation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Diagnostic Report",
+   "link_to": "Diagnostic Report",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Lab Desk",
+ "type": "Workspace"
+}

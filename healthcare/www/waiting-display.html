@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="refresh" content="20">
+	<title>{{ _("Waiting Room") }}</title>
+	<style>
+		body { margin: 0; padding: 2vw; background: #0f172a; color: #f8fafc; font-family: system-ui, sans-serif; }
+		header { display: flex; justify-content: space-between; align-items: baseline; font-size: 2.5vw; margin-bottom: 2vw; }
+		.queues { display: grid; grid-template-columns: repeat(auto-fill, minmax(28vw, 1fr)); gap: 2vw; }
+		.queue { background: #1e293b; border-radius: 1vw; padding: 1.5vw; }
+		.queue h2 { margin: 0 0 1vw; font-size: 2vw; color: #93c5fd; }
+		.row { display: flex; justify-content: space-between; font-size: 3vw; padding: .5vw 0; border-top: 1px solid #334155; }
+		.row .number { font-weight: 700; }
+		.row .wait { color: #cbd5e1; }
+		.row .wait.long { color: #fca5a5; }
+		.empty { font-size: 2.5vw; color: #94a3b8; }
+	</style>
+</head>
+<body>
+	<header>
+		<span>{{ _("Now Waiting") }}</span>
+		<small>{{ _("Updated") }} {{ updated }}</small>
+	</header>
+	{% if queues %}
+	<div class="queues">
+		{% for queue, patients in queues.items() %}
+		<section class="queue">
+			<h2>{{ queue }}</h2>
+			{% for p in patients %}
+			<div class="row">
+				<span class="number">#{{ p.number }}</span>
+				{# ponytail: 30 min "long wait" threshold hard-coded, move to Healthcare Settings if it needs tuning #}
+				<span class="wait {{ 'long' if p.minutes >= 30 }}">{{ p.minutes }} {{ _("min") }}</span>
+			</div>
+			{% endfor %}
+		</section>
+		{% endfor %}
+	</div>
+	{% else %}
+	<p class="empty">{{ _("No patients waiting") }}</p>
+	{% endif %}
+</body>
+</html>

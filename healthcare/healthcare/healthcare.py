@@ -22,6 +22,8 @@ data = {
 		"Nursing User",
 		"Physician",
 		"Patient",
+		"Healthcare Pharmacist",
+		"Healthcare Receptionist",
 	],
 	"custom_fields": {
 		"Sales Invoice": [

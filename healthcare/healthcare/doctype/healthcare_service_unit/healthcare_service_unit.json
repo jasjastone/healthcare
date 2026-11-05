@@ -258,13 +258,20 @@
    "table_fieldname": "practitioner_schedules"
   }
  ],
- "modified": "2025-12-25 09:36:44.187301",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Healthcare Service Unit",
  "nsm_parent_field": "parent_healthcare_service_unit",
  "owner": "Administrator",
  "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Receptionist"
+  },
   {
    "email": 1,
    "export": 1,

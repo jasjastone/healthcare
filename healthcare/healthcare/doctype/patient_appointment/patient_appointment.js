@@ -313,18 +313,11 @@ frappe.ui.form.on("Patient Appointment", {
 			frm.set_value("service_unit", "");
 			frm.trigger("set_check_availability_action");
 		} else if (frm.doc.appointment_for == "Service Unit") {
-			frm.set_value({
-				practitioner: "",
-				practitioner_name: "",
-				department: "",
-			});
+			// practitioner kept: optional assignee who gets the appointment alert
+			frm.set_value("department", "");
 			frm.trigger("set_book_action");
 		} else if (frm.doc.appointment_for == "Department") {
-			frm.set_value({
-				practitioner: "",
-				practitioner_name: "",
-				service_unit: "",
-			});
+			frm.set_value("service_unit", "");
 			frm.trigger("set_book_action");
 		} else {
 			if (frm.doc.appointment_for == "Department") {

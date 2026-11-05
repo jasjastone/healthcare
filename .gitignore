@@ -7,3 +7,4 @@ healthcare/docs/current
 __pycache__/
 dist/
 node_modules/
+.playwright-mcp
