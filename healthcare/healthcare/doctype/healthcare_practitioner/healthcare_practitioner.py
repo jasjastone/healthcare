@@ -171,3 +171,53 @@ def get_supplier_and_user(user_id=None, supplier=None):
 	)
 
 	return supplier_and_user[0] if supplier_and_user else None
+
+
+@frappe.whitelist()
+def create_from_employees(employees):
+	"""Create a Healthcare Practitioner per Employee (Employee form button and list bulk action).
+	Employees without a system user are skipped and reported, so alerts always have someone to reach."""
+	employees = frappe.parse_json(employees)
+	result = {"created": [], "existing": [], "missing_user": []}
+
+	# get_list applies the caller's Employee permissions
+	for emp in frappe.get_list(
+		"Employee",
+		filters={"name": ("in", employees)},
+		fields=[
+			"name",
+			"employee_name",
+			"first_name",
+			"last_name",
+			"gender",
+			"cell_number",
+			"image",
+			"user_id",
+		],
+	):
+		if not emp.user_id:
+			result["missing_user"].append(f"{emp.name}: {emp.employee_name}")
+			continue
+
+		existing = frappe.db.get_value("Healthcare Practitioner", {"employee": emp.name})
+		existing = existing or frappe.db.get_value("Healthcare Practitioner", {"user_id": emp.user_id})
+		if existing:
+			result["existing"].append(existing)
+			continue
+
+		practitioner = frappe.get_doc(
+			{
+				"doctype": "Healthcare Practitioner",
+				"first_name": emp.first_name or emp.employee_name,
+				"last_name": emp.last_name,
+				"gender": emp.gender,
+				"mobile_phone": emp.cell_number,
+				"image": emp.image,
+				"employee": emp.name,
+				"user_id": emp.user_id,
+				"status": "Active",
+			}
+		).insert()
+		result["created"].append(practitioner.name)
+
+	return result

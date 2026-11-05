@@ -232,13 +232,20 @@
  ],
  "grid_page_length": 50,
  "links": [],
- "modified": "2026-09-09 17:23:28.174740",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Medication",
  "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Pharmacist"
+  },
   {
    "create": 1,
    "delete": 1,

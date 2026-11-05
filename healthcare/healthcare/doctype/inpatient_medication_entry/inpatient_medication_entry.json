@@ -190,13 +190,23 @@
    "table_fieldname": "medication_orders"
   }
  ],
- "modified": "2026-07-01 16:23:51.273504",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Inpatient Medication Entry",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Pharmacist",
+   "submit": 1,
+   "write": 1
+  },
   {
    "cancel": 1,
    "create": 1,

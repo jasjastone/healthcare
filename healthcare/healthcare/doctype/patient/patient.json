@@ -33,6 +33,8 @@
   "email",
   "invite_user",
   "user_id",
+  "more_info",
+  "patient_details",
   "customer_details_section",
   "customer",
   "customer_group",
@@ -42,8 +44,6 @@
   "default_currency",
   "default_price_list",
   "language",
-  "more_info",
-  "patient_details",
   "dashboard_tab",
   "address_and_contact_tab",
   "address_contacts",
@@ -149,7 +149,8 @@
    "fieldtype": "Date",
    "in_preview": 1,
    "label": "Date of birth",
-   "no_copy": 1
+   "no_copy": 1,
+   "reqd": 1
   },
   {
    "fieldname": "age_html",
@@ -209,7 +210,8 @@
    "in_standard_filter": 1,
    "label": "Mobile",
    "no_copy": 1,
-   "options": "Phone"
+   "options": "Phone",
+   "reqd": 1
   },
   {
    "bold": 1,
@@ -224,6 +226,7 @@
   {
    "fieldname": "phone",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_filter": 1,
    "label": "Phone",
    "no_copy": 1,
@@ -377,7 +380,8 @@
    "fieldname": "last_name",
    "fieldtype": "Data",
    "label": "Last Name",
-   "no_copy": 1
+   "no_copy": 1,
+   "reqd": 1
   },
   {
    "fieldname": "first_name",
@@ -455,7 +459,7 @@
   },
   {
    "allow_in_quick_entry": 1,
-   "default": "1",
+   "default": "0",
    "fieldname": "invite_user",
    "fieldtype": "Check",
    "label": "Invite as User",
@@ -622,12 +626,41 @@
   }
  ],
  "max_attachments": 50,
- "modified": "2026-06-18 13:50:07.543590",
+ "modified": "2026-10-27 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Patient",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Pharmacist"
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Receptionist",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Healthcare Administrator",
+   "share": 1,
+   "write": 1
+  },
   {
    "create": 1,
    "delete": 1,
@@ -677,7 +710,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "restrict_to_domain": "Healthcare",
  "row_format": "Dynamic",
  "search_fields": "patient_name,mobile,email,phone,uid",

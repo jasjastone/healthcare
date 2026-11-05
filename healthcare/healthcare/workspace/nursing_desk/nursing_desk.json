@@ -1,0 +1,85 @@
+{
+ "app": "healthcare",
+ "charts": [],
+ "content": "[{\"id\":\"nd-header1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Your Shortcuts</span>\",\"col\":12}},{\"id\":\"nd-queue01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clinical Queue\",\"col\":4}},{\"id\":\"nd-task001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Nursing Task\",\"col\":4}},{\"id\":\"nd-vital01\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Vital Signs\",\"col\":4}},{\"id\":\"nd-proc001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Clinical Procedure\",\"col\":4}},{\"id\":\"nd-ipr0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inpatient Record\",\"col\":4}},{\"id\":\"nd-pat0001\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Patient\",\"col\":4}}]",
+ "creation": "2026-10-27 13:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "healthcare",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Nursing Desk",
+ "links": [],
+ "modified": "2026-10-27 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Healthcare",
+ "name": "Nursing Desk",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Nursing User"
+  },
+  {
+   "role": "Healthcare Administrator"
+  }
+ ],
+ "sequence_id": 31.0,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Clinical Queue",
+   "link_to": "clinical-queue",
+   "type": "Page"
+  },
+  {
+   "color": "Orange",
+   "doc_view": "List",
+   "format": "{} Requested",
+   "label": "Nursing Task",
+   "link_to": "Nursing Task",
+   "stats_filter": "[[\"Nursing Task\",\"status\",\"=\",\"Requested\"]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Vital Signs",
+   "link_to": "Vital Signs",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Clinical Procedure",
+   "link_to": "Clinical Procedure",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Inpatient Record",
+   "link_to": "Inpatient Record",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Patient",
+   "link_to": "Patient",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Nursing Desk",
+ "type": "Workspace"
+}

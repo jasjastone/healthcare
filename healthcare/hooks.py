@@ -7,7 +7,7 @@ app_color = "grey"
 app_email = "system@tmhsgroup.com"
 app_license = "GNU GPL V3"
 required_apps = ["frappe/erpnext"]
-app_home = "/desk/healthcare"
+app_home = "/app/healthcare"
 
 add_to_apps_screen = [
 	{
@@ -25,6 +25,9 @@ add_to_apps_screen = [
 # app_include_css = "/assets/healthcare/css/healthcare.css"
 app_include_js = "healthcare.bundle.js"
 
+# louder copy of frappe's alert sound, played by public/js/healthcare_alert.js
+sounds = [{"name": "healthcare_alert", "src": "/assets/frappe/sounds/alert.mp3", "volume": 1}]
+
 # include js, css files in header of web template
 # web_include_css = "/assets/healthcare/css/healthcare.css"
 # web_include_js = "/assets/healthcare/js/healthcare.js"
@@ -40,8 +43,8 @@ app_include_js = "healthcare.bundle.js"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Sales Invoice": "public/js/sales_invoice.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_js = {"Sales Invoice": "public/js/sales_invoice.js", "Employee": "public/js/employee.js"}
+doctype_list_js = {"Employee": "public/js/employee_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -133,6 +136,12 @@ doc_events = {
 		"on_trash": "healthcare.healthcare.utils.company_on_trash",
 	},
 	"Patient": {"after_insert": "healthcare.regional.india.abdm.utils.set_consent_attachment_details"},
+	"Patient Appointment": {"on_update": "healthcare.healthcare.alerts.appointment_assigned"},
+	"Patient Encounter": {"after_insert": "healthcare.healthcare.alerts.encounter_created"},
+	"Service Request": {"on_submit": "healthcare.healthcare.alerts.order_submitted"},
+	"Medication Request": {"on_submit": "healthcare.healthcare.alerts.medication_ordered"},
+	"Nursing Task": {"after_insert": "healthcare.healthcare.alerts.nursing_task_created"},
+	"Lab Test": {"after_insert": "healthcare.healthcare.alerts.lab_test_created"},
 	"Payment Entry": {
 		"on_submit": "healthcare.healthcare.custom_doctype.payment_entry.manage_payment_entry_submit_cancel",
 		"on_cancel": "healthcare.healthcare.custom_doctype.payment_entry.manage_payment_entry_submit_cancel",
