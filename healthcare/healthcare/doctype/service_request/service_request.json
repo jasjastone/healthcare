@@ -634,13 +634,21 @@
    "link_fieldname": "service_request"
   }
  ],
- "modified": "2026-06-17 18:11:51.318190",
+ "modified": "2026-11-06 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Healthcare",
  "name": "Service Request",
  "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Laboratory User",
+   "write": 1
+  },
   {
    "create": 1,
    "delete": 1,

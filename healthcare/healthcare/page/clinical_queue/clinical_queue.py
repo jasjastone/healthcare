@@ -41,8 +41,9 @@ def get_queue():
 					title,
 					"Service Request",
 					{
+						# submitting sets "active"; the Lab Test / Clinical Procedure sets "completed"
 						"docstatus": 1,
-						"status": "draft-Request Status",
+						"status": "active-Request Status",
 						"template_dt": ("in", [dt for dt, r in ORDER_ROLES.items() if r == role]),
 					},
 					["patient_name", "template_dn", "order_date", "order_time"],
